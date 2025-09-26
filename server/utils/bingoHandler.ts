@@ -25,6 +25,10 @@ function fillBingo() {
     bingoField = field;
 }
 
+function reset() {
+    fillBingo();
+}
+
 fillBingo()
 
 export function handleBingoEvents(socket: Socket, io: Namespace) {
@@ -44,6 +48,11 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
         });
 
         io.emit("activateBingoResponse", rowIndex, columnIndex, id, color);
+    })
+
+    socket.on("reset", () => {
+        reset();
+        io.emit("bingoField", bingoField)
     })
 
     socket.on('disconnect', () => {

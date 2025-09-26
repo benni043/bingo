@@ -76,6 +76,9 @@ function getCellStyle(rowIndex: number, columnIndex: number) {
   console.error("error")
 }
 
+function reset() {
+  socket.emit("reset");
+}
 
 </script>
 
@@ -105,6 +108,8 @@ function getCellStyle(rowIndex: number, columnIndex: number) {
         </button>
       </div>
     </div>
+
+    <button @click="reset()">Reset</button>
   </div>
 </template>
 
