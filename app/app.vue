@@ -28,8 +28,15 @@ function fillBingo() {
       field[i]![j] = {text: ((j + 1) + (5 * i)).toString(), doneBy: []};
     }
   }
+
   bingoField.value = field;
 }
+
+fillBingo();
+
+socket.on("bingoField", (field: Bingo[][]) => {
+  bingoField.value = field;
+})
 
 function activateBingo(rowIndex: number, columnIndex: number) {
   socket.emit("activateBingo", rowIndex, columnIndex, socket.id, myColor.value);
@@ -46,18 +53,29 @@ socket.on(
 );
 
 function getCellStyle(rowIndex: number, columnIndex: number) {
-  if (bingoField.value[rowIndex]![columnIndex]!.doneBy.length == 0) {
-    return;
+  const doneBy = bingoField.value[rowIndex]![columnIndex]!.doneBy;
+
+  if (doneBy.length === 0) {
+    return {};
   }
 
-  console.log(bingoField.value[rowIndex]![columnIndex]!.doneBy[0]!.color)
+  if (doneBy.length === 1) {
+    return {
+      backgroundColor: doneBy[0]!.color,
+    };
+  }
 
-  return {
-    backgroundColor: `${bingoField.value[rowIndex]![columnIndex]!.doneBy[0]!.color}`
-  };
+  if (doneBy.length === 2) {
+    const c1 = doneBy[0]!.color;
+    const c2 = doneBy[1]!.color;
+    return {
+      background: `linear-gradient(135deg, ${c1} 50%, ${c2} 50%)`,
+    };
+  }
+
+  console.error("error")
 }
 
-fillBingo();
 
 </script>
 
