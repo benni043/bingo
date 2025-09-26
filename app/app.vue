@@ -131,15 +131,15 @@ function reset() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px; /* Text passt besser in kleine Zellen */
+  font-size: 14px;
   border: 1px solid #333;
   cursor: pointer;
   font-weight: bold;
   text-align: center;
   padding: 4px;
-  color: white; /* Standardfarbe */
-  background-color: #444; /* default dunkler Hintergrund */
-  border-radius: 6px; /* optisch schöner */
-  word-wrap: break-word; /* Textumbruch, falls zu lang */
-
-} </style>
+  color: white;
+  background-color: #444;
+  border-radius: 6px;
+  word-wrap: break-word;
+}
+</style>

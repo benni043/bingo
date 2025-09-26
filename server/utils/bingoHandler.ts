@@ -22,7 +22,7 @@ function fillBingo() {
         }
     }
 
-    bingoField= [
+    bingoField = [
         [
             {text: "Überfahre einen Radfahrer", doneBy: []},
             {text: "Schaue durch ein Fernglas am Observatorium", doneBy: []},
@@ -110,7 +110,7 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
 
     const AUTO_MARK_INTERVAL = 4 * 60 * 1000;
 
-    function autoMarkRandomField(io: Namespace) {
+    function autoMarkRandomField(io: Namespace, color: string) {
         const emptyOrNotFullCells: { row: number; col: number }[] = [];
 
         for (let i = 0; i < 5; i++) {
@@ -127,15 +127,15 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
         const randomIndex = Math.floor(Math.random() * emptyOrNotFullCells.length);
         const {row, col} = emptyOrNotFullCells[randomIndex];
 
-        const color = "red";
-        const id = "auto";
+        const id = "auto" + color;
 
         bingoField[row][col].doneBy.push({id, color});
         io.emit("activateBingoResponse", row, col, id, color);
     }
 
     setInterval(() => {
-        autoMarkRandomField(io);
+        autoMarkRandomField(io, "red");
+        autoMarkRandomField(io, "green");
     }, AUTO_MARK_INTERVAL);
 
 }
