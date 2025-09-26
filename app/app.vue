@@ -15,12 +15,53 @@ function fillBingo() {
       field[i]![j] = {text: ((j + 1) + (5 * i)).toString(), doneBy: []};
     }
   }
-  bingoField.value = field;
+
+  bingoField.value = [
+    [
+      {text: "Überfahre einen Radfahrer", doneBy: []},
+      {text: "Schaue durch ein Fernglas am Observatorium", doneBy: []},
+      {text: "Klaue einen Cargocob", doneBy: []},
+      {text: "Versenke ein Golfcart im Wasser", doneBy: []},
+      {text: "Kletter auf einen Vinewood Buchstaben", doneBy: []},
+    ],
+    [
+      {text: "Verprügel einen Gärtner", doneBy: []},
+      {text: "Stirb durch einen elektrischen Schock", doneBy: []},
+      {text: "Betrete die Mine", doneBy: []},
+      {text: "Betrete den Kontrollraum des Military Towers", doneBy: []},
+      {text: "Bewirf eine Polizeistation mit Tränengas", doneBy: []},
+    ],
+    [
+      {text: "Erreiche ein Fahndungslevel von 4", doneBy: []},
+      {text: "Finde einen Pool ohne Wasser", doneBy: []},
+      {text: "Verbrenne einen Traktor", doneBy: []},
+      {text: "Finde eine Kuh, ein Schwein und ein Huhn", doneBy: []},
+      {text: "Fahre einen Obstand um", doneBy: []},
+    ],
+    [
+      {text: "Überquere mit einem Boot den Alamosee - Sandy Shores", doneBy: []},
+      {text: "Parke ein Taxi auf Michals Grundstück", doneBy: []},
+      {text: "Fahre 1x um den Entensee - Vinewood Hills", doneBy: []},
+      {text: "Mache Yoga auf einer Theaterbühne", doneBy: []},
+      {text: "Betrete ein Containerschiff", doneBy: []},
+    ],
+    [
+      {text: "Klaue ein Cabrio", doneBy: []},
+      {text: "Parke auf einem Basketballfeld", doneBy: []},
+      {text: "Fahre zwei Runden auf der Pferderennbahn", doneBy: []},
+      {text: "Erschiße jemand verkleideten bei den Filmstudios", doneBy: []},
+      {text: "Schaffe einen Monsterstunt", doneBy: []},
+    ],
+  ];
 }
 
 fillBingo();
 socket.on("bingoField", (field: Bingo[][]) => {
   bingoField.value = field;
+})
+
+socket.on("error", (err: string) => {
+  alert(err);
 })
 
 function activateBingo(rowIndex: number, columnIndex: number) {
@@ -55,8 +96,9 @@ function reset() {
     <div class="color-picker"><label> Choose your color: <input v-model="myColor" type="color"> </label></div>
     <div class="bingo-board">
       <div v-for="(bingoRow, rowIndex) in bingoField" :key="rowIndex" class="bingo-row">
-        <button v-for="(elem, columnIndex) in bingoRow" :key="columnIndex" class="bingo-cell"
-                :style="getCellStyle(rowIndex, columnIndex)" @click="activateBingo(rowIndex, columnIndex)"> {{
+        <button
+            v-for="(elem, columnIndex) in bingoRow" :key="columnIndex" class="bingo-cell"
+            :style="getCellStyle(rowIndex, columnIndex)" @click="activateBingo(rowIndex, columnIndex)"> {{
             elem.text
           }}
         </button>
@@ -75,8 +117,8 @@ function reset() {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
   gap: 4px;
-  width: 400px;
-  height: 400px;
+  width: 800px;
+  height: 500px;
 }
 
 .bingo-row {
@@ -89,9 +131,15 @@ function reset() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px; /* Text passt besser in kleine Zellen */
   border: 1px solid #333;
   cursor: pointer;
-  color: white;
   font-weight: bold;
+  text-align: center;
+  padding: 4px;
+  color: white; /* Standardfarbe */
+  background-color: #444; /* default dunkler Hintergrund */
+  border-radius: 6px; /* optisch schöner */
+  word-wrap: break-word; /* Textumbruch, falls zu lang */
+
 } </style>

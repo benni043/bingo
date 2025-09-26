@@ -22,7 +22,43 @@ function fillBingo() {
         }
     }
 
-    bingoField = field;
+    bingoField= [
+        [
+            {text: "Überfahre einen Radfahrer", doneBy: []},
+            {text: "Schaue durch ein Fernglas am Observatorium", doneBy: []},
+            {text: "Klaue einen Cargocob", doneBy: []},
+            {text: "Versenke ein Golfcart im Wasser", doneBy: []},
+            {text: "Kletter auf einen Vinewood Buchstaben", doneBy: []},
+        ],
+        [
+            {text: "Verprügel einen Gärtner", doneBy: []},
+            {text: "Stirb durch einen elektrischen Schock", doneBy: []},
+            {text: "Betrete die Mine", doneBy: []},
+            {text: "Betrete den Kontrollraum des Military Towers", doneBy: []},
+            {text: "Bewirf eine Polizeistation mit Tränengas", doneBy: []},
+        ],
+        [
+            {text: "Erreiche ein Fahndungslevel von 4", doneBy: []},
+            {text: "Finde einen Pool ohne Wasser", doneBy: []},
+            {text: "Verbrenne einen Traktor", doneBy: []},
+            {text: "Finde eine Kuh, ein Schwein und ein Huhn", doneBy: []},
+            {text: "Fahre einen Obstand um", doneBy: []},
+        ],
+        [
+            {text: "Überquere mit einem Boot den Alamosee - Sandy Shores", doneBy: []},
+            {text: "Parke ein Taxi auf Michals Grundstück", doneBy: []},
+            {text: "Fahre 1x um den Entensee - Vinewood Hills", doneBy: []},
+            {text: "Mache Yoga auf einer Theaterbühne", doneBy: []},
+            {text: "Betrete ein Containerschiff", doneBy: []},
+        ],
+        [
+            {text: "Klaue ein Cabrio", doneBy: []},
+            {text: "Parke auf einem Basketballfeld", doneBy: []},
+            {text: "Fahre zwei Runden auf der Pferderennbahn", doneBy: []},
+            {text: "Erschiße jemand verkleideten bei den Filmstudios", doneBy: []},
+            {text: "Schaffe einen Monsterstunt", doneBy: []},
+        ],
+    ];
 }
 
 function reset() {
@@ -39,16 +75,19 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
     socket.on("activateBingo", (rowIndex: number, columnIndex: number, id: string, color: string) => {
         if (color == "") {
             console.error("color is undefined!")
+            socket.emit("error", `color is undefined!`)
             return;
         }
 
         if (bingoField[rowIndex]![columnIndex]!.doneBy.length >= 2) {
             console.error("zu oft")
+            socket.emit("error", `zu oft!`)
             return;
         }
 
         if (bingoField[rowIndex]![columnIndex]!.doneBy.length == 1 && bingoField[rowIndex]![columnIndex]!.doneBy[0].id == id) {
             console.error("du selbst");
+            socket.emit("error", `du selbst!`)
             return;
         }
 
