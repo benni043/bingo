@@ -37,8 +37,18 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
     socket.emit("bingoField", bingoField)
 
     socket.on("activateBingo", (rowIndex: number, columnIndex: number, id: string, color: string) => {
+        if (color == "") {
+            console.error("color is undefined!")
+            return;
+        }
+
         if (bingoField[rowIndex]![columnIndex]!.doneBy.length >= 2) {
-            console.error("stop")
+            console.error("zu oft")
+            return;
+        }
+
+        if (bingoField[rowIndex]![columnIndex]!.doneBy.length == 1 && bingoField[rowIndex]![columnIndex]!.doneBy[0].id == id) {
+            console.error("du selbst");
             return;
         }
 
@@ -58,4 +68,35 @@ export function handleBingoEvents(socket: Socket, io: Namespace) {
     socket.on('disconnect', () => {
         console.log(`User disconnected from lobby: ${socket.id}`);
     });
+
+    const AUTO_MARK_INTERVAL = 4 * 60 * 1000;
+
+    function autoMarkRandomField(io: Namespace) {
+        const emptyOrNotFullCells: { row: number; col: number }[] = [];
+
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                const doneByColors = bingoField[i][j].doneBy.map(p => p.color);
+                if (!doneByColors.includes("yellow") && bingoField[i][j].doneBy.length < 2) {
+                    emptyOrNotFullCells.push({row: i, col: j});
+                }
+            }
+        }
+
+        if (emptyOrNotFullCells.length === 0) return;
+
+        const randomIndex = Math.floor(Math.random() * emptyOrNotFullCells.length);
+        const {row, col} = emptyOrNotFullCells[randomIndex];
+
+        const color = "red";
+        const id = "auto";
+
+        bingoField[row][col].doneBy.push({id, color});
+        io.emit("activateBingoResponse", row, col, id, color);
+    }
+
+    setInterval(() => {
+        autoMarkRandomField(io);
+    }, AUTO_MARK_INTERVAL);
+
 }
